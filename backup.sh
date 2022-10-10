@@ -1,5 +1,5 @@
 #!/bin/bash
-
+CURRENT_PATH=$(dirname "$0")
 DOCKER_BASE_PATH=/home/ruffi/git/quarantanove
 FORGET_OPTIONS="--keep-daily 1 --keep-weekly 5 --keep-monthly 12 --keep-yearly 3"
 #VERBOSITY="--verbose" 
@@ -23,10 +23,10 @@ do_do_backup () {(set -e
   restic -r $RESTIC_REPOBASEPATH/$RESTIC_REPO forget $FORGET_OPTIONS $VERBOSITY
 )}
 
-export $(grep -v '^#' .env | xargs -d '\n')
+export $(grep -v '^#' $CURRENT_PATH/.env | xargs -d '\n')
 
 echo "*** $(date -u) Running scripts/*.sh"
-for SCRIPT in scripts/*.sh; do
+for SCRIPT in $CURRENT_PATH/scripts/*.sh; do
   echo "*** $(date -u) Running $SCRIPT"
   bash "$SCRIPT"
 done

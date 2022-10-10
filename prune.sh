@@ -1,5 +1,5 @@
 #!/bin/bash
-
+CURRENT_PATH=$(dirname "$0")
 #VERBOSITY="--verbose" 
 VERBOSITY="--quiet" 
 
@@ -18,7 +18,7 @@ do_do_prune () {
   restic -r $RESTIC_REPOBASEPATH/$RESTIC_REPO prune $VERBOSITY
 }
 
-export $(grep -v '^#' .env | xargs -d '\n')
+export $(grep -v '^#' $CURRENT_PATH/.env | xargs -d '\n')
 
 do_prune mikrotik             /backups/mikrotik
 do_prune quarantanove_configs $DOCKER_BASE_PATH/configs
