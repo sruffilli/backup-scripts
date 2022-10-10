@@ -2,6 +2,8 @@
 
 DOCKER_BASE_PATH=/home/ruffi/git/quarantanove
 FORGET_OPTIONS="--keep-daily 1 --keep-weekly 5 --keep-monthly 12 --keep-yearly 3"
+#VERBOSITY="--verbose" 
+VERBOSITY="--quiet" 
 
 do_backup () {
   do_do_backup $1 $2
@@ -16,11 +18,9 @@ do_do_backup () {(set -e
   RESTIC_REPO=$1
   DIR_TO_BACKUP=$2
   echo "*** $(date -u) Backing up $DIR_TO_BACKUP to $RESTIC_REPO"
-  restic -r $RESTIC_REPOBASEPATH/$1 backup $DIR_TO_BACKUP --quiet
+  restic -r $RESTIC_REPOBASEPATH/$1 backup $DIR_TO_BACKUP $VERBOSITY
   echo "*** $(date -u) Running forget on $RESTIC_REPO"
-  restic -r $RESTIC_REPOBASEPATH/$RESTIC_REPO forget $FORGET_OPTIONS --quiet
-  echo "*** $(date -u) Running prune on $RESTIC_REPO"
-  restic -r $RESTIC_REPOBASEPATH/$RESTIC_REPO prune --quiet
+  restic -r $RESTIC_REPOBASEPATH/$RESTIC_REPO forget $FORGET_OPTIONS $VERBOSITY
 )}
 
 export $(grep -v '^#' .env | xargs -d '\n')
