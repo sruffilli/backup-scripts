@@ -1,29 +1,45 @@
 # Backup-scripts
 
+This is a collection of scripts I'm using for remote backups.
+It leverages [`restic`](https://github.com/restic/restic) and some ugly bash-glue to make it easy to use and extend.
+
+The backup strategy consists of different **storage backends** (e.g. local paths, GCS buckets, Google Drive folders, ...), each containing multiple **repositories** which holds all the backups for a single **backup folder**.
+
+This implies that when multiple storage backends are defined, each will hold an independent backup of all the folders in scope.
+
 ## Setup
 
-If using anything different from local filesystem, make sure the storage destination exists and is properly configured. e.g. [GCS](https://restic.readthedocs.io/en/stable/030_preparing_a_new_repo.html#google-cloud-storage).
-Repository initialisation is covered below.
-
+If using anything different from local filesystem for your storage backends, make sure the storage destination exists and is properly configured (e.g. for [GCS](https://restic.readthedocs.io/en/stable/030_preparing_a_new_repo.html#google-cloud-storage)). Repository initialisation is covered below.
 
 ### .env file
 
-Create your own `.env` file by copying the provided sample.
+`.env` contains the base configuration for the system.
+
+`RESTIC_BACKENDS` a comma-separated list of storage backends used for backups
+
+`RESTIC_PASSWORD` is the passphrase used to encrypt/decrypt data
+
+`GOOGLE_PROJECT_ID` and `GOOGLE_APPLICATION_CREDENTIALS` are only required when using GCS as a storage backend. Refer to the [official documentation](https://restic.readthedocs.io/en/stable/030_preparing_a_new_repo.html#google-cloud-storage) for more details.
+
+Create your own `.env` file by copying the provided sample, and update as required.
 
 ```bash
 cp .env.sample .env
 ```
 
-Your file will look like the one below:
+
+### config.cfg
+
+`config.cfg` contains a comma-separated list of directories to backup, and their repository name.
+
+A typical `config.cfg` file looks like the one below:
 
 ```bash
-RESTIC_REPOBASEPATHS=gs:my-storage-bucket:,/restic
-RESTIC_PASSWORD=resticpassword
-GOOGLE_PROJECT_ID=mygoogleprojectid
-GOOGLE_APPLICATION_CREDENTIALS=/path/to/service_account_credentials.json
+foo:/backups/foo
+bar:/mnt/bar
 ```
 
-`GOOGLE_` variables are used for the credentials to write to a GCS bucket. They can be left unset if GCS is not used.
+where `foo` is the repository name, and `/backups/foo` is the local folder to backup.
 
 ### Initialise your repository(es)
 
@@ -33,11 +49,10 @@ The first time (only!) run
 bash init-repos.sh
 ```
 
-### Configure helper scripts
-STUB
+## Helper scripts
 
-### Configure backup paths
-STUB
+`.sh` files in the `./scripts` directory will be executed to perform ad-hoc before the backup starts. This comes handy e.g. for database dumps.
+
 
 ### Crontab 
 STUB
