@@ -2,8 +2,8 @@
 CURRENT_PATH=$(dirname "$0")
 DOCKER_BASE_PATH=/home/ruffi/git/quarantanove
 FORGET_OPTIONS="--keep-daily 1 --keep-weekly 5 --keep-monthly 12 --keep-yearly 3"
-VERBOSITY="--verbose" 
-#VERBOSITY="--quiet" 
+#VERBOSITY="--verbose" 
+VERBOSITY="--quiet" 
 
 export $(grep -v '^#' $CURRENT_PATH/.env | xargs -d '\n')
 
@@ -35,9 +35,13 @@ for SCRIPT in $CURRENT_PATH/scripts/*.sh; do
   bash "$SCRIPT"
 done
 
+# Read the configured repository basepaths from env variable RESTIC_REPOBASEPATHS
 IFS=',' read -ra RESTIC_REPOSITORIES <<< "$RESTIC_REPOBASEPATHS"
+# For each base repository...
 for REPO in "${RESTIC_REPOSITORIES[@]}"; do
-  do_backup $REPO mikrotik             /backups/mikrotik
-  do_backup $REPO quarantanove_configs $DOCKER_BASE_PATH/configs
-  do_backup $REPO quarantanove_volumes $DOCKER_BASE_PATH/volumes
+  # ... and for each directory in config.cfg
+  for LINE in `grep -v -E "^#|^\\s*$" $CURRENT_PATH/config.cfg` ; do
+    IFS=":" read -ra REPO_CONFIG <<< "$LINE"
+    do_backup $REPO ${REPO_CONFIG[0]} ${REPO_CONFIG[1]}
+  done  
 done

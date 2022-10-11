@@ -1,0 +1,7 @@
+# This file is a list of 
+# repo_basedir:/local/path
+#
+# where repo_basedir is a subdir of each repository base path.
+
+foo:/backups/foo
+bar:/mnt/bar

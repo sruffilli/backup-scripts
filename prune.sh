@@ -25,9 +25,14 @@ _do_prune () {(set -e
   restic -r $RESTIC_BASEPATH/$RESTIC_REPO prune $VERBOSITY
 )}
 
+
+# Read the configured repository basepaths from env variable RESTIC_REPOBASEPATHS
 IFS=',' read -ra RESTIC_REPOSITORIES <<< "$RESTIC_REPOBASEPATHS"
+# For each base repository...
 for REPO in "${RESTIC_REPOSITORIES[@]}"; do
-  do_prune $REPO mikrotik             /backups/mikrotik
-  do_prune $REPO quarantanove_configs $DOCKER_BASE_PATH/configs
-  do_prune $REPO quarantanove_volumes $DOCKER_BASE_PATH/volumes
+  # ... and for each directory
+  for LINE in `grep -v -E "^#|^\\s*$" $CURRENT_PATH/config.cfg` ; do
+    IFS=":" read -ra REPO_CONFIG <<< "$LINE"
+    do_prune $REPO ${REPO_CONFIG[0]} ${REPO_CONFIG[1]}
+  done  
 done
