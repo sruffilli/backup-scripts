@@ -54,5 +54,12 @@ bash init-repos.sh
 `.sh` files in the `./scripts` directory will be executed to perform ad-hoc before the backup starts. This comes handy e.g. for database dumps.
 
 
-### Crontab 
-STUB
+## Crontab 
+Two operations can be added to crontab: 
+
+```crontab
+# Run backup scripts every day at 1AM
+0 1 * * * bash /path/to/backup-scripts/backup.sh
+# Run prune scripts every week at 4AM
+0 4 * * 1 bash /home/ruffi/git/backup-scripts/prune.sh
+``` 
