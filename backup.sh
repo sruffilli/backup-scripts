@@ -5,6 +5,8 @@ FORGET_OPTIONS="--keep-daily 1 --keep-weekly 5 --keep-monthly 12 --keep-yearly 3
 #VERBOSITY="--verbose" 
 VERBOSITY="--quiet" 
 
+export $(grep -v '^#' $CURRENT_PATH/.env | xargs -d '\n')
+
 do_backup () {
   do_do_backup $1 $2
   STATUS=$?
@@ -22,8 +24,6 @@ do_do_backup () {(set -e
   echo "*** $(date -u) Running forget on $RESTIC_REPO"
   restic -r $RESTIC_REPOBASEPATH/$RESTIC_REPO forget $FORGET_OPTIONS $VERBOSITY
 )}
-
-export $(grep -v '^#' $CURRENT_PATH/.env | xargs -d '\n')
 
 echo "*** $(date -u) Running scripts/*.sh"
 for SCRIPT in $CURRENT_PATH/scripts/*.sh; do

@@ -3,6 +3,8 @@ CURRENT_PATH=$(dirname "$0")
 #VERBOSITY="--verbose" 
 VERBOSITY="--quiet" 
 
+export $(grep -v '^#' $CURRENT_PATH/.env | xargs -d '\n')
+
 do_prune () {
   do_do_prune $1 $2
   STATUS=$?
@@ -12,13 +14,11 @@ do_prune () {
   fi
 }
 
-do_do_prune () {
+do_do_prune () {(set -e 
   RESTIC_REPO=$1
   echo "*** $(date -u) Running prune on $RESTIC_REPO"
   restic -r $RESTIC_REPOBASEPATH/$RESTIC_REPO prune $VERBOSITY
-}
-
-export $(grep -v '^#' $CURRENT_PATH/.env | xargs -d '\n')
+)}
 
 do_prune mikrotik             /backups/mikrotik
 do_prune quarantanove_configs $DOCKER_BASE_PATH/configs
