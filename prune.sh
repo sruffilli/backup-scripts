@@ -6,7 +6,7 @@ VERBOSITY="--quiet"
 export $(grep -v '^#' $CURRENT_PATH/.env | xargs -d '\n')
 
 do_prune () {
-  do_do_prune $1 $2
+  _do_prune $1 $2
   STATUS=$?
   if [ $STATUS -ne 0 ]; then
     echo "!!! Error trying to backup $2 to $1"
@@ -14,7 +14,7 @@ do_prune () {
   fi
 }
 
-do_do_prune () {(set -e 
+_do_prune () {(set -e 
   RESTIC_REPO=$1
   echo "*** $(date -u) Running prune on $RESTIC_REPO"
   restic -r $RESTIC_REPOBASEPATH/$RESTIC_REPO prune $VERBOSITY

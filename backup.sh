@@ -8,7 +8,7 @@ VERBOSITY="--quiet"
 export $(grep -v '^#' $CURRENT_PATH/.env | xargs -d '\n')
 
 do_backup () {
-  do_do_backup $1 $2
+  _do_backup $1 $2
   STATUS=$?
   if [ $STATUS -ne 0 ]; then
     echo "!!! Error trying to backup $2 to $1"
@@ -16,7 +16,7 @@ do_backup () {
   fi
 }
 
-do_do_backup () {(set -e 
+_do_backup () {(set -e 
   RESTIC_REPO=$1
   DIR_TO_BACKUP=$2
   echo "*** $(date -u) Backing up $DIR_TO_BACKUP to $RESTIC_REPO"
