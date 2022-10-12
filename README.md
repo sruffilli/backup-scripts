@@ -61,5 +61,5 @@ Two operations can be added to crontab:
 # Run backup scripts every day at 1AM
 0 1 * * * bash /path/to/backup-scripts/backup.sh
 # Run prune scripts every week at 4AM
-0 4 * * 1 bash /home/ruffi/git/backup-scripts/prune.sh
+0 4 * * 1 bash /path/to/backup-scripts/prune.sh
 ``` 
