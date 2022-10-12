@@ -1,7 +1,7 @@
 #!/bin/bash
 CURRENT_PATH=$(dirname "$0")
 DOCKER_BASE_PATH=/home/ruffi/git/quarantanove
-FORGET_OPTIONS="--keep-daily 1 --keep-weekly 5 --keep-monthly 12 --keep-yearly 3"
+FORGET_OPTIONS="--keep-daily 7 --keep-weekly 5 --keep-monthly 12 --keep-yearly 3"
 #VERBOSITY="--verbose" 
 VERBOSITY="--quiet" 
 
